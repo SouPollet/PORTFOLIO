@@ -1,0 +1,1085 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CV — Antoine Pollet — Concepteur 3D</title>
+<style>
+/* ═══════════════════════════════════════════
+   FONT IMPORTS
+   ═══════════════════════════════════════════ */
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+/* ═══════════════════════════════════════════
+   CSS CUSTOM PROPERTIES
+   ═══════════════════════════════════════════ */
+:root {
+  --bg:          #F3F6FB;
+  --grid:        rgba(18,56,105,0.055);
+  --grid-major:  rgba(18,56,105,0.11);
+  --ink:         #122B47;
+  --ink-soft:    #3B5A7A;
+  --ink-muted:   #6B85A3;
+  --accent:      #005BAF;
+  --accent-lt:   #3A8FD4;
+  --orange:      #D65A2A;
+  --orange-lt:   #E8885A;
+  --hatch:       rgba(18,56,105,0.045);
+  --border:      #C0D0E0;
+  --border-lt:   #D8E4F0;
+  --white:       #FFFFFF;
+  --sidebar-bg:  #EDF1F7;
+  --font-head:   'Space Grotesk', 'Segoe UI', sans-serif;
+  --font-body:   'Inter', 'Segoe UI', sans-serif;
+  --font-mono:   'JetBrains Mono', 'Courier New', monospace;
+}
+
+/* ═══════════════════════════════════════════
+   RESET
+   ═══════════════════════════════════════════ */
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+/* ═══════════════════════════════════════════
+   SCREEN VIEW — PERSPECTIVE & FLOAT
+   ═══════════════════════════════════════════ */
+body {
+  background: #D0D8E4;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 30px;
+  min-height: 100vh;
+  font-family: var(--font-body);
+  color: var(--ink);
+}
+
+.page {
+  width: 210mm;
+  min-height: 297mm;
+  background: var(--bg);
+  position: relative;
+  /* 3D float effect on screen */
+  transform: perspective(1800px) rotateX(0.6deg) rotateY(-0.3deg);
+  transform-style: preserve-3d;
+  box-shadow:
+    0 2px 4px rgba(18,43,71,0.06),
+    0 8px 24px rgba(18,43,71,0.10),
+    0 24px 60px rgba(18,43,71,0.10),
+    0 48px 80px rgba(18,43,71,0.06);
+  overflow: hidden;
+  animation: buildIn 1.1s cubic-bezier(0.22,1,0.36,1) both;
+}
+
+@keyframes buildIn {
+  0%   { opacity:0; transform: perspective(1800px) rotateX(2deg) translateY(30px); }
+  100% { opacity:1; transform: perspective(1800px) rotateX(0.6deg) rotateY(-0.3deg) translateY(0); }
+}
+
+/* ═══════════════════════════════════════════
+   GRID BACKGROUND (build-plate / graph paper)
+   ═══════════════════════════════════════════ */
+.page::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px),
+    linear-gradient(var(--grid-major) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-major) 1px, transparent 1px);
+  background-size:
+    5mm 5mm,
+    5mm 5mm,
+    25mm 25mm,
+    25mm 25mm;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Isometric accent pattern (very subtle) */
+.page::after {
+  content: '';
+  position: absolute;
+  top: 0; right: 0;
+  width: 60mm; height: 60mm;
+  background-image:
+    repeating-linear-gradient(
+      30deg,
+      transparent,
+      transparent 4mm,
+      rgba(18,56,105,0.018) 4mm,
+      rgba(18,56,105,0.018) 4.15mm
+    ),
+    repeating-linear-gradient(
+      150deg,
+      transparent,
+      transparent 4mm,
+      rgba(18,56,105,0.018) 4mm,
+      rgba(18,56,105,0.018) 4.15mm
+    ),
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 4mm,
+      rgba(18,56,105,0.018) 4mm,
+      rgba(18,56,105,0.018) 4.15mm
+    );
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.7;
+}
+
+/* ═══════════════════════════════════════════
+   CORNER REGISTRATION MARKS
+   ═══════════════════════════════════════════ */
+.corner {
+  position: absolute;
+  width: 8mm; height: 8mm;
+  z-index: 5;
+  pointer-events: none;
+}
+.corner::before, .corner::after {
+  content: '';
+  position: absolute;
+  background: var(--ink);
+}
+.corner.tl { top: 6mm; left: 6mm; }
+.corner.tl::before { width: 100%; height: 0.3mm; top: 0; left: 0; }
+.corner.tl::after  { width: 0.3mm; height: 100%; top: 0; left: 0; }
+
+.corner.tr { top: 6mm; right: 6mm; }
+.corner.tr::before { width: 100%; height: 0.3mm; top: 0; right: 0; }
+.corner.tr::after  { width: 0.3mm; height: 100%; top: 0; right: 0; }
+
+.corner.bl { bottom: 6mm; left: 6mm; }
+.corner.bl::before { width: 100%; height: 0.3mm; bottom: 0; left: 0; }
+.corner.bl::after  { width: 0.3mm; height: 100%; bottom: 0; left: 0; }
+
+.corner.br { bottom: 6mm; right: 6mm; }
+.corner.br::before { width: 100%; height: 0.3mm; bottom: 0; right: 0; }
+.corner.br::after  { width: 0.3mm; height: 100%; bottom: 0; right: 0; }
+
+/* ═══════════════════════════════════════════
+   DRAWING HEADER (title bar, top)
+   ═══════════════════════════════════════════ */
+.drawing-header {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8mm 10mm 5mm 10mm;
+  border-bottom: 0.4mm solid var(--ink);
+}
+.drawing-header::after {
+  content: '';
+  position: absolute;
+  bottom: -0.4mm;
+  left: 0; right: 0;
+  height: 0.15mm;
+  background: var(--accent);
+  opacity: 0.5;
+}
+
+.header-name {
+  font-family: var(--font-head);
+  font-weight: 700;
+  font-size: 22pt;
+  letter-spacing: 0.5mm;
+  color: var(--ink);
+  line-height: 1;
+}
+.header-title {
+  font-family: var(--font-mono);
+  font-size: 7pt;
+  letter-spacing: 0.6mm;
+  color: var(--accent);
+  margin-top: 1.5mm;
+  text-transform: uppercase;
+}
+.header-meta {
+  text-align: right;
+  font-family: var(--font-mono);
+  font-size: 5.5pt;
+  color: var(--ink-muted);
+  line-height: 1.8;
+  text-transform: uppercase;
+  letter-spacing: 0.3mm;
+}
+.header-meta span { color: var(--ink); font-weight: 600; }
+
+/* ═══════════════════════════════════════════
+   MAIN LAYOUT
+   ═══════════════════════════════════════════ */
+.main {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  padding: 0;
+}
+
+/* ── LEFT SIDEBAR (hatched) ── */
+.col-left {
+  width: 62mm;
+  padding: 5mm 4mm 5mm 8mm;
+  background: var(--sidebar-bg);
+  background-image:
+    repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 2.2mm,
+      var(--hatch) 2.2mm,
+      var(--hatch) 2.5mm
+    );
+  border-right: 0.25mm dashed var(--border);
+  position: relative;
+}
+
+/* ── RIGHT CONTENT ── */
+.col-right {
+  flex: 1;
+  padding: 5mm 8mm 5mm 6mm;
+  position: relative;
+}
+
+/* ═══════════════════════════════════════════
+   PHOTO — technical frame
+   ═══════════════════════════════════════════ */
+.photo-wrap {
+  width: 32mm;
+  height: 38mm;
+  margin: 0 auto 4mm auto;
+  position: relative;
+}
+.photo-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border: 0.3mm solid var(--ink);
+  position: relative;
+  z-index: 1;
+}
+/* corner ticks around photo */
+.photo-wrap::before,
+.photo-wrap::after {
+  content: '';
+  position: absolute;
+  width: 3mm; height: 3mm;
+  border-color: var(--accent);
+  border-style: solid;
+  z-index: 2;
+}
+.photo-wrap::before {
+  top: -1mm; left: -1mm;
+  border-width: 0.3mm 0 0 0.3mm;
+}
+.photo-wrap::after {
+  bottom: -1mm; right: -1mm;
+  border-width: 0 0.3mm 0.3mm 0;
+}
+
+/* ═══════════════════════════════════════════
+   SECTION HEADERS
+   ═══════════════════════════════════════════ */
+.sec-head {
+  font-family: var(--font-mono);
+  font-size: 6.5pt;
+  font-weight: 600;
+  letter-spacing: 0.8mm;
+  text-transform: uppercase;
+  color: var(--white);
+  background: var(--ink);
+  padding: 1.2mm 3mm;
+  margin-bottom: 3mm;
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 2mm;
+}
+.sec-head .num {
+  color: var(--accent-lt);
+  font-weight: 500;
+}
+.sec-head::after {
+  content: '';
+  flex: 1;
+  height: 0.1mm;
+  background: var(--accent-lt);
+  opacity: 0.3;
+}
+
+/* small isometric cube icon */
+.sec-head .cube {
+  width: 2.2mm; height: 2.2mm;
+  display: inline-block;
+  position: relative;
+  flex-shrink: 0;
+}
+.sec-head .cube::before {
+  content: '◆';
+  font-size: 5pt;
+  color: var(--accent-lt);
+  line-height: 1;
+}
+
+/* ═══════════════════════════════════════════
+   LEFT: CONTACT
+   ═══════════════════════════════════════════ */
+.contact-block {
+  margin-bottom: 4mm;
+}
+.contact-item {
+  font-size: 6.2pt;
+  line-height: 1.65;
+  color: var(--ink-soft);
+  display: flex;
+  align-items: flex-start;
+  gap: 1.5mm;
+  margin-bottom: 0.8mm;
+  word-break: break-all;
+}
+.contact-item .ci-label {
+  font-family: var(--font-mono);
+  font-size: 5pt;
+  color: var(--accent);
+  text-transform: uppercase;
+  flex-shrink: 0;
+  width: 6mm;
+  font-weight: 600;
+  padding-top: 0.3mm;
+}
+.contact-item .ci-val {
+  font-size: 5.8pt;
+  color: var(--ink);
+}
+.contact-item a {
+  color: var(--ink);
+  text-decoration: none;
+  border-bottom: 0.1mm solid var(--accent-lt);
+}
+
+/* ═══════════════════════════════════════════
+   LEFT: SKILLS (BOM style)
+   ═══════════════════════════════════════════ */
+.skill-group {
+  margin-bottom: 3mm;
+}
+.skill-cat {
+  font-family: var(--font-mono);
+  font-size: 5pt;
+  text-transform: uppercase;
+  letter-spacing: 0.5mm;
+  color: var(--orange);
+  font-weight: 600;
+  margin-bottom: 1.2mm;
+  padding-left: 1mm;
+  border-left: 0.8mm solid var(--orange);
+}
+.skill-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1mm;
+  padding-left: 2mm;
+}
+.skill-tag {
+  font-family: var(--font-mono);
+  font-size: 4.8pt;
+  padding: 0.6mm 1.5mm;
+  background: var(--white);
+  border: 0.15mm solid var(--border);
+  color: var(--ink-soft);
+  line-height: 1.5;
+  transition: all 0.2s ease;
+  position: relative;
+}
+.skill-tag::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 0.5mm; height: 100%;
+  background: var(--accent);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.skill-tag:hover {
+  border-color: var(--accent);
+  background: #EEF4FB;
+}
+.skill-tag:hover::before { opacity: 1; }
+
+/* ═══════════════════════════════════════════
+   LEFT: LANGUES
+   ═══════════════════════════════════════════ */
+.lang-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2mm;
+  padding: 1.5mm 0;
+  border-bottom: 0.1mm dashed var(--border);
+}
+.lang-name {
+  font-family: var(--font-mono);
+  font-size: 6pt;
+  font-weight: 600;
+  color: var(--ink);
+}
+.lang-level {
+  font-family: var(--font-mono);
+  font-size: 5pt;
+  color: var(--ink-muted);
+  text-align: right;
+}
+/* bar */
+.lang-bar {
+  width: 22mm;
+  height: 1.2mm;
+  background: var(--border-lt);
+  position: relative;
+  margin-top: 0.5mm;
+}
+.lang-bar-fill {
+  position: absolute;
+  top: 0; left: 0;
+  height: 100%;
+  background: var(--accent);
+  opacity: 0.7;
+}
+
+/* ═══════════════════════════════════════════
+   LEFT: EXTRA
+   ═══════════════════════════════════════════ */
+.extra-item {
+  font-size: 5.8pt;
+  line-height: 1.5;
+  color: var(--ink-soft);
+  margin-bottom: 1mm;
+  padding-left: 3mm;
+  position: relative;
+}
+.extra-item::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 1.2mm;
+  width: 1.5mm; height: 1.5mm;
+  background: var(--orange);
+  transform: rotate(45deg);
+}
+
+/* ═══════════════════════════════════════════
+   RIGHT: ACCROCHE
+   ═══════════════════════════════════════════ */
+.accent-bar {
+  width: 100%;
+  height: 0.3mm;
+  background: linear-gradient(90deg, var(--accent) 0%, var(--accent-lt) 40%, transparent 100%);
+  margin-bottom: 3mm;
+}
+.accent-text {
+  font-size: 6.5pt;
+  line-height: 1.65;
+  color: var(--ink-soft);
+  font-style: italic;
+  padding: 2mm 3mm;
+  background: var(--white);
+  border-left: 0.6mm solid var(--accent);
+  margin-bottom: 5mm;
+  position: relative;
+}
+.accent-text::before {
+  content: '"';
+  font-family: var(--font-head);
+  font-size: 18pt;
+  color: var(--accent);
+  opacity: 0.15;
+  position: absolute;
+  top: -1mm;
+  left: 1mm;
+}
+
+/* ═══════════════════════════════════════════
+   RIGHT: EXPERIENCES (STRATE system)
+   ═══════════════════════════════════════════ */
+.strate {
+  position: relative;
+  padding: 2mm 0 3mm 5mm;
+  border-left: 0.3mm solid var(--border);
+  margin-bottom: 0;
+}
+.strate::before {
+  /* layer dot */
+  content: '';
+  position: absolute;
+  left: -1.2mm;
+  top: 1mm;
+  width: 2mm;
+  height: 2mm;
+  background: var(--white);
+  border: 0.4mm solid var(--accent);
+  border-radius: 50%;
+}
+.strate:last-child::after {
+  content: '';
+  position: absolute;
+  left: -0.15mm;
+  top: 2mm;
+  bottom: -3mm;
+  width: 0;
+  border-left: 0.3mm solid var(--border);
+}
+.strate:last-child { border-left-color: transparent; }
+
+.strate-num {
+  font-family: var(--font-mono);
+  font-size: 4.5pt;
+  color: var(--accent);
+  letter-spacing: 0.5mm;
+  text-transform: uppercase;
+  margin-bottom: 0.5mm;
+}
+.strate-role {
+  font-family: var(--font-head);
+  font-weight: 600;
+  font-size: 8.5pt;
+  color: var(--ink);
+  line-height: 1.2;
+}
+.strate-co {
+  font-family: var(--font-mono);
+  font-size: 5.5pt;
+  color: var(--ink-soft);
+  margin: 0.5mm 0;
+}
+.strate-co .periode {
+  color: var(--orange);
+  font-weight: 600;
+}
+.strate-missions {
+  margin-top: 1mm;
+}
+.strate-missions li {
+  font-size: 5.6pt;
+  line-height: 1.5;
+  color: var(--ink-soft);
+  margin-bottom: 0.4mm;
+  padding-left: 3mm;
+  position: relative;
+  list-style: none;
+}
+.strate-missions li::before {
+  content: '▸';
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+  font-size: 5pt;
+}
+.strate-tags {
+  margin-top: 1.5mm;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8mm;
+}
+.strate-tags span {
+  font-family: var(--font-mono);
+  font-size: 4.3pt;
+  padding: 0.4mm 1.2mm;
+  background: var(--sidebar-bg);
+  border: 0.1mm solid var(--border-lt);
+  color: var(--ink-muted);
+  letter-spacing: 0.2mm;
+}
+
+/* ═══════════════════════════════════════════
+   RIGHT: FORMATION
+   ═══════════════════════════════════════════ */
+.formation {
+  display: flex;
+  gap: 3mm;
+  margin-bottom: 2.5mm;
+  padding-bottom: 2.5mm;
+  border-bottom: 0.1mm solid var(--border-lt);
+}
+.formation:last-child { border-bottom: none; margin-bottom: 0; }
+.fam-year {
+  font-family: var(--font-mono);
+  font-size: 7pt;
+  font-weight: 600;
+  color: var(--accent);
+  flex-shrink: 0;
+  width: 10mm;
+  padding-top: 0.3mm;
+}
+.fam-content {
+  flex: 1;
+}
+.fam-title {
+  font-family: var(--font-head);
+  font-weight: 600;
+  font-size: 7.5pt;
+  color: var(--ink);
+  line-height: 1.25;
+}
+.fam-detail {
+  font-family: var(--font-mono);
+  font-size: 5pt;
+  color: var(--ink-muted);
+  margin-top: 0.5mm;
+  line-height: 1.4;
+}
+
+/* ═══════════════════════════════════════════
+   TITLE BLOCK (bottom, like engineering drawing)
+   ═══════════════════════════════════════════ */
+.title-block {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  border-top: 0.3mm solid var(--ink);
+  margin: 4mm 8mm 0 8mm;
+  height: 10mm;
+}
+.tb-cell {
+  flex: 1;
+  padding: 1.5mm 3mm;
+  border-right: 0.15mm solid var(--border);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.tb-cell:last-child { border-right: none; }
+.tb-label {
+  font-family: var(--font-mono);
+  font-size: 4pt;
+  color: var(--ink-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5mm;
+}
+.tb-value {
+  font-family: var(--font-mono);
+  font-size: 6pt;
+  color: var(--ink);
+  font-weight: 600;
+}
+
+/* ═══════════════════════════════════════════
+   DIMENSION LINES (decorative)
+   ═══════════════════════════════════════════ */
+.dim-line {
+  position: relative;
+  height: 3mm;
+  margin: 0 10mm;
+}
+.dim-line::before {
+  content: '';
+  position: absolute;
+  top: 1.5mm;
+  left: 0; right: 0;
+  height: 0.1mm;
+  background: var(--ink-muted);
+}
+.dim-line::after {
+  content: '210.0';
+  position: absolute;
+  top: -0.5mm;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--font-mono);
+  font-size: 4.5pt;
+  color: var(--ink-muted);
+  background: var(--bg);
+  padding: 0 2mm;
+}
+/* arrow ends */
+.dim-line .arrow-l,
+.dim-line .arrow-r {
+  position: absolute;
+  top: 1.1mm;
+  width: 0; height: 0;
+  border-top: 0.6mm solid transparent;
+  border-bottom: 0.6mm solid transparent;
+}
+.dim-line .arrow-l { left: 0; border-right: 1.5mm solid var(--ink-muted); }
+.dim-line .arrow-r { right: 0; border-left: 1.5mm solid var(--ink-muted); }
+
+/* ═══════════════════════════════════════════
+   SECTION DIVIDER WITH TICKS
+   ═══════════════════════════════════════════ */
+.sec-divider {
+  display: flex;
+  align-items: center;
+  gap: 1mm;
+  margin: 4mm 0 3mm 0;
+}
+.sec-divider .line {
+  flex: 1;
+  height: 0.1mm;
+  background: var(--border);
+}
+.sec-divider .tick {
+  width: 0.5mm;
+  height: 1.5mm;
+  background: var(--accent);
+}
+.sec-divider .label {
+  font-family: var(--font-mono);
+  font-size: 5.5pt;
+  font-weight: 600;
+  color: var(--ink);
+  text-transform: uppercase;
+  letter-spacing: 0.8mm;
+  white-space: nowrap;
+}
+
+/* ═══════════════════════════════════════════
+   PRINT STYLES
+   ═══════════════════════════════════════════ */
+@page {
+  size: A4;
+  margin: 0;
+}
+
+@media print {
+  body {
+    background: white;
+    padding: 0;
+    display: block;
+  }
+  .page {
+    transform: none;
+    box-shadow: none;
+    animation: none;
+    width: 100%;
+    min-height: 100vh;
+  }
+  .skill-tag:hover {
+    border-color: var(--border);
+    background: var(--white);
+  }
+}
+
+/* ═══════════════════════════════════════════
+   SCREEN: hover glow on page
+   ═══════════════════════════════════════════ */
+@media screen {
+  .page:hover {
+    transform: perspective(1800px) rotateX(0.3deg) rotateY(0deg) translateY(-2px);
+    box-shadow:
+      0 4px 8px rgba(18,43,71,0.08),
+      0 12px 32px rgba(18,43,71,0.12),
+      0 32px 72px rgba(18,43,71,0.10),
+      0 60px 100px rgba(18,43,71,0.06);
+    transition: all 0.5s ease;
+  }
+}
+</style>
+</head>
+
+<body>
+<div class="page">
+
+  <!-- Corner registration marks -->
+  <div class="corner tl"></div>
+  <div class="corner tr"></div>
+  <div class="corner bl"></div>
+  <div class="corner br"></div>
+
+  <!-- ═══ DRAWING HEADER ═══ -->
+  <header class="drawing-header">
+    <div>
+      <div class="header-name">ANTOINE POLLET</div>
+      <div class="header-title">Concepteur 3D · Ingénieur Fablab</div>
+    </div>
+    <div class="header-meta">
+      DWG-NO: <span>CV-AP-2025-001</span><br>
+      REV: <span>A</span> &nbsp;·&nbsp; ÉCH: <span>1:1</span> &nbsp;·&nbsp; MAT: <span>TALENT</span><br>
+      FORMAT: <span>A4</span> &nbsp;·&nbsp; PROJET: <span>EMPLOI</span>
+    </div>
+  </header>
+
+  <!-- Dimension line -->
+  <div class="dim-line">
+    <span class="arrow-l"></span>
+    <span class="arrow-r"></span>
+  </div>
+
+  <!-- ═══ MAIN TWO-COLUMN ═══ -->
+  <div class="main">
+
+    <!-- ── LEFT SIDEBAR ── -->
+    <aside class="col-left">
+
+      <!-- Photo -->
+      <div class="photo-wrap">
+        <img src="profile.png" alt="Antoine Pollet">
+      </div>
+
+      <!-- Contact -->
+      <div class="sec-head"><span class="cube"></span><span class="num">01</span> Coordonnées</div>
+      <div class="contact-block">
+        <div class="contact-item">
+          <span class="ci-label">ADR</span>
+          <span class="ci-val">3 rue du Chemin Blanc<br>54000 Nancy, France</span>
+        </div>
+        <div class="contact-item">
+          <span class="ci-label">TEL</span>
+          <span class="ci-val">07 85 52 84 48</span>
+        </div>
+        <div class="contact-item">
+          <span class="ci-label">EM@</span>
+          <span class="ci-val"><a href="mailto:pollet.antoine@proton.me">pollet.antoine@proton.me</a></span>
+        </div>
+        <div class="contact-item">
+          <span class="ci-label">LKD</span>
+          <span class="ci-val"><a href="https://www.linkedin.com/in/antoine-pollet-3d">/antoine-pollet-3d</a></span>
+        </div>
+        <div class="contact-item">
+          <span class="ci-label">GIT</span>
+          <span class="ci-val"><a href="https://github.com/SouPollet">github.com/SouPollet</a></span>
+        </div>
+        <div class="contact-item">
+          <span class="ci-label">WEB</span>
+          <span class="ci-val"><a href="https://soupollet.github.io/Portfolio">soupollet.github.io/Portfolio</a></span>
+        </div>
+      </div>
+
+      <!-- Compétences -->
+      <div class="sec-head"><span class="cube"></span><span class="num">02</span> Compétences</div>
+
+      <div class="skill-group">
+        <div class="skill-cat">Machines / Procédés</div>
+        <div class="skill-tags">
+          <span>FDM</span><span>SLA / DLP</span><span>Découpe Laser CO₂</span>
+          <span>CNC</span><span>Arduino / RPi</span><span>Brodeuse</span>
+          <span>Risographie</span><span>Traceur</span><span>Sublimation</span>
+          <span>VR / AR</span><span>Eye-tracking</span><span>Motion Capture</span>
+          <span>Scanner 3D</span><span>Caméra 360</span><span>Soudure</span>
+        </div>
+      </div>
+
+      <div class="skill-group">
+        <div class="skill-cat">Logiciels / Outils</div>
+        <div class="skill-tags">
+          <span>Blender</span><span>FreeCAD</span><span>Fusion 360</span>
+          <span>OpenSCAD</span><span>OrcaSlicer</span><span>IceSL</span>
+          <span>Unity</span><span>Unreal</span><span>Godot</span>
+          <span>3D Coat</span><span>C#</span><span>Python</span>
+          <span>Three.js</span><span>VS Codium</span><span>Ollama</span>
+          <span>Adobe Suite</span><span>Affinity</span><span>Figma</span>
+          <span>Reality Converter</span><span>Tobii Pro Lab</span>
+          <span>Perception Neuron</span><span>DaVinci Resolve</span>
+          <span>Xcode / Android Studio</span><span>SnapMaker</span>
+        </div>
+      </div>
+
+      <div class="skill-group">
+        <div class="skill-cat">Savoir-faire</div>
+        <div class="skill-tags">
+          <span>CAO / FAO</span><span>PAO</span><span>Optimisation maillage</span>
+          <span>UX Design</span><span>Animation 3D</span><span>Programmation</span>
+          <span>Gestion de projet</span><span>Formation</span>
+          <span>Audit AR/VR</span><span>Éco-conception</span>
+          <span>Maintenance</span><span>Accompagnement</span>
+        </div>
+      </div>
+
+      <!-- Langues -->
+      <div class="sec-head"><span class="cube"></span><span class="num">03</span> Langues</div>
+      <div class="lang-row">
+        <div style="flex:1">
+          <div class="lang-name">Français</div>
+          <div class="lang-level">Langue maternelle</div>
+        </div>
+      </div>
+      <div class="lang-row">
+        <div style="flex:1">
+          <div class="lang-name">Anglais</div>
+          <div class="lang-level">C1 Exp. · C2 Compr.</div>
+          <div class="lang-bar"><div class="lang-bar-fill" style="width:92%"></div></div>
+        </div>
+      </div>
+
+      <!-- Bénévolat / Extra -->
+      <div class="sec-head"><span class="cube"></span><span class="num">04</span> Hors-cadre</div>
+      <div class="extra-item">Bénévole Repair Café — open-source & éco-conception</div>
+      <div class="extra-item">Game Jam · Fabrikathon (participations régulières)</div>
+      <div class="extra-item">Japonais — apprentissage autodidacte</div>
+      <div class="extra-item">Ancien formateur tennis</div>
+      <div class="extra-item">Comédie musicale (interprétation)</div>
+
+    </aside>
+
+    <!-- ── RIGHT CONTENT ── -->
+    <section class="col-right">
+
+      <!-- Accroche -->
+      <div class="accent-bar"></div>
+      <p class="accent-text">
+        De la strate 1 à la strate 500 : je matérialise l'invisible. Six ans à transformer
+        des idées en prototypes FDM/SLA, en expériences VR/AR immersives et en formations
+        grand public. 180 projets/an accompagnés, 30+ machines maîtrisées, 15+ logiciels
+        dans la boîte à outils. Mon fil rouge : rendre l'innovation accessible, tangible
+        et éco-responsable.
+      </p>
+
+      <!-- ═══ EXPÉRIENCES ═══ -->
+      <div class="sec-divider">
+        <div class="line"></div>
+        <div class="tick"></div>
+        <span class="label">Expériences</span>
+        <div class="tick"></div>
+        <div class="line"></div>
+      </div>
+
+      <!-- STRATE 01 -->
+      <div class="strate">
+        <div class="strate-num">◆ STRATE 01 — EN COURS</div>
+        <div class="strate-role">Assistant Ingénieur en Fablab</div>
+        <div class="strate-co">IUT Nancy Charlemagne · Charly Lab · Nancy &nbsp;|&nbsp; <span class="periode">Sept. 2019 → présent</span></div>
+        <ul class="strate-missions">
+          <li>Accompagnement de <strong>180 projets innovants / an</strong> : impression 3D FDM & SLA, découpe laser CO₂ 100 W, CNC, prototypage rapide</li>
+          <li>Prestations AR/VR pour les <strong>J.O. 2024</strong> et pour des Instituts Médico-Éducatifs</li>
+          <li>Formation de professionnels à l'usage des machines du fablab (VR/AR, 3D, laser, couture, riso…)</li>
+          <li>Maintenance, calibration et déploiement de parcs équipements hétérogènes</li>
+        </ul>
+        <div class="strate-tags">
+          <span>Bambu Lab</span><span>Creality</span><span>Elegoo</span><span>FLSun Delta</span>
+          <span>Trotec</span><span>Arduino</span><span>Raspberry</span>
+          <span>Meta Quest 3</span><span>Apple Vision Pro</span><span>HoloLens 2</span>
+          <span>Perception Neuron</span><span>OrcaSlicer</span><span>IceSL</span>
+        </div>
+      </div>
+
+      <!-- STRATE 02 -->
+      <div class="strate">
+        <div class="strate-num">◆ STRATE 02 — EN COURS</div>
+        <div class="strate-role">Vacataire Enseignant — IUT Nancy-Charlemagne</div>
+        <div class="strate-co">Nancy &nbsp;|&nbsp; <span class="periode">Sept. 2020 → présent</span></div>
+        <ul class="strate-missions">
+          <li>Cours de <strong>conception graphique</strong> (TC – Stratégie de marque) : affiches, logos, mise en page, montage vidéo</li>
+          <li>Cours de <strong>Motion Capture</strong> (MMI – Multimédia) : courts-métrages 3D en capture de mouvement</li>
+          <li>Cours de <strong>développement AR/VR</strong> : sur-impression de modèles 3D, musée VR multi-plateformes</li>
+        </ul>
+        <div class="strate-tags">
+          <span>Blender</span><span>Unity</span><span>Unreal</span><span>Godot</span>
+          <span>Adobe</span><span>Figma</span><span>Reality Converter</span>
+        </div>
+      </div>
+
+      <!-- STRATE 03 -->
+      <div class="strate">
+        <div class="strate-num">◆ STRATE 03</div>
+        <div class="strate-role">Co-gérant — LookAt Studio</div>
+        <div class="strate-co">Nancy &nbsp;|&nbsp; <span class="periode">Sept. 2017 → JUIL. 2019</span></div>
+        <ul class="strate-missions">
+          <li>Prestations AR/VR pour le <strong>tourisme</strong> et la <strong>promotion immobilière</strong></li>
+          <li>Conception d'expériences immersives sur tablettes iOS/Android et casques VR</li>
+        </ul>
+        <div class="strate-tags">
+          <span>HTC Vive</span><span>Oculus</span><span>Unity</span><span>3DS Max</span><span>3D Coat</span><span>SteamVR</span>
+        </div>
+      </div>
+
+      <!-- STRATE 04 -->
+      <div class="strate">
+        <div class="strate-num">◆ STRATE 04</div>
+        <div class="strate-role">Employé polyvalent — Intermarché</div>
+        <div class="strate-co">Châtel-Villain &nbsp;|&nbsp; <span class="periode">Sept. 2018 → JUIL. 2019</span></div>
+        <ul class="strate-missions">
+          <li>Job alimentaire en parallèle de la gestion d'entreprise</li>
+        </ul>
+      </div>
+
+      <!-- STRATE 05 -->
+      <div class="strate">
+        <div class="strate-num">◆ STRATE 05</div>
+        <div class="strate-role">Réalisation & montage vidéo — Drone Infini</div>
+        <div class="strate-co">Saint-Geosmes &nbsp;|&nbsp; <span class="periode">AOÛT 2017 → SEPT. 2017</span></div>
+        <ul class="strate-missions">
+          <li>Spots publicitaires en prises de vues drone pour des communes du Grand-Est</li>
+        </ul>
+        <div class="strate-tags">
+          <span>DJI Pro</span><span>Premiere Pro</span><span>Audacity</span>
+        </div>
+      </div>
+
+      <!-- STRATE 06 -->
+      <div class="strate">
+        <div class="strate-num">◆ STRATE 06</div>
+        <div class="strate-role">Stage → Emploi ét. — Développement VR · Tecxor</div>
+        <div class="strate-co">Châligny &nbsp;|&nbsp; <span class="periode">JUIN 2017 → AOÛT 2017</span></div>
+        <ul class="strate-missions">
+          <li>Prestations VR promotion immobilière — Gérardmer</li>
+          <li>Conception d'un jeu vidéo VR en QuickStarter + marketing & communication</li>
+        </ul>
+        <div class="strate-tags">
+          <span>HTC Vive</span><span>Oculus Rift S</span><span>Unity</span><span>3DS Max</span><span>3D Coat</span>
+        </div>
+      </div>
+
+      <!-- ═══ FORMATIONS ═══ -->
+      <div class="sec-divider">
+        <div class="line"></div>
+        <div class="tick"></div>
+        <span class="label">Formations</span>
+        <div class="tick"></div>
+        <div class="line"></div>
+      </div>
+
+      <div class="formation">
+        <div class="fam-year">2021</div>
+        <div class="fam-content">
+          <div class="fam-title">LP AFTER — Animateur-Facilitateur de Tiers-Lieu Éco-Responsable</div>
+          <div class="fam-detail">IUT Nancy-Charlemagne · Nancy · En alternance<br>Gestion technique, commerciale & administrative d'un fablab</div>
+        </div>
+      </div>
+
+      <div class="formation">
+        <div class="fam-year">2020</div>
+        <div class="fam-content">
+          <div class="fam-title">L3 MIAGE — Méthodes Informatiques Appliquées à la Gestion des Entreprises</div>
+          <div class="fam-detail">IDMC · Nancy · En alternance<br>Gestion informatique & data science</div>
+        </div>
+      </div>
+
+      <div class="formation">
+        <div class="fam-year">2017</div>
+        <div class="fam-content">
+          <div class="fam-title">DUT MMI — Métiers du Multimédia & de l'Internet</div>
+          <div class="fam-detail">IUT Nancy-Charlemagne · Nancy<br>Infographies, sites web & productions numériques pour entreprises</div>
+        </div>
+      </div>
+
+    </section>
+  </div>
+
+  <!-- ═══ TITLE BLOCK ═══ -->
+  <div class="title-block">
+    <div class="tb-cell">
+      <div class="tb-label">Dessin</div>
+      <div class="tb-value">ANTOINE POLLET</div>
+    </div>
+    <div class="tb-cell">
+      <div class="tb-label">Objet</div>
+      <div class="tb-value">CV CONCEPT. 3D</div>
+    </div>
+    <div class="tb-cell">
+      <div class="tb-label">Échelle</div>
+      <div class="tb-value">1 : 1</div>
+    </div>
+    <div class="tb-cell">
+      <div class="tb-label">Matériau</div>
+      <div class="tb-value">TALENT · PASSION</div>
+    </div>
+    <div class="tb-cell">
+      <div class="tb-label">Date</div>
+      <div class="tb-value">2025</div>
+    </div>
+    <div class="tb-cell">
+      <div class="tb-label">Rev.</div>
+      <div class="tb-value">A</div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
